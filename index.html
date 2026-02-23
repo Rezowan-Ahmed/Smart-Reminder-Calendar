@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Reminder Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .header h1 i {
+            margin-right: 10px;
+        }
+
+        .notification-badge {
+            background: #ff4757;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .notification-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        /* Task Form Styles */
+        .task-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            height: fit-content;
+        }
+
+        .task-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .datetime-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #calendar {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Tasks List */
+        .tasks-list {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tasks-header h3 {
+            color: #333;
+            margin: 0;
+            font-size: 1.3em;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            background: #f0f2f5;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tasks-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .priority-high {
+            border-left-color: #ff4757;
+        }
+
+        .priority-medium {
+            border-left-color: #ffa502;
+        }
+
+        .priority-low {
+            border-left-color: #26de81;
+        }
+
+        .task-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .task-title h4 {
+            color: #333;
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .task-priority {
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .priority-high .task-priority {
+            background: #ff4757;
+        }
+
+        .priority-medium .task-priority {
+            background: #ffa502;
+        }
+
+        .priority-low .task-priority {
+            background: #26de81;
+        }
+
+        .task-datetime {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .task-datetime i {
+            margin-right: 5px;
+            color: #667eea;
+        }
+
+        .task-description {
+            color: #777;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            border-left: 2px solid #e0e0e0;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .edit-btn {
+            color: #667eea;
+        }
+
+        .edit-btn:hover {
+            background: #e8eefd;
+        }
+
+        .delete-btn {
+            color: #ff4757;
+        }
+
+        .delete-btn:hover {
+            background: #ffe8e8;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .task-detail-item {
+            margin-bottom: 15px;
+        }
+
+        .task-detail-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .task-detail-value {
+            color: #333;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .notification-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 350px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .notification.warning {
+            border-left-color: #ffa502;
+        }
+
+        .notification.expired {
+            border-left-color: #ff4757;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .tasks-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-panel" id="notificationPanel"></div>
+    
+    <!-- Task Detail Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Task Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Task</h2>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editTaskId">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="editDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Date & Time</label>
+                    <div class="datetime-group">
+                        <input type="date" id="editDate" required>
+                        <input type="time" id="editTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select id="editPriority">
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Update Task</button>
+                <button type="button" class="btn btn-danger" onclick="deleteFromEdit()">Delete Task</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calendar-check"></i> Smart Reminder Calendar</h1>
+            <div class="notification-badge" onclick="showAllNotifications()">
+                <i class="fas fa-bell"></i> <span id="notificationCount">0</span> Reminders
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Task Form -->
+            <div class="task-form">
+                <h2><i class="fas fa-plus-circle"></i> Add New Reminder</h2>
+                <form id="taskForm">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="taskTitle" placeholder="e.g., Multiple Accounts Creation" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="taskDescription" rows="3" placeholder="e.g., 1. Google Scholar 2. Research Gate"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date & Time</label>
+                        <div class="datetime-group">
+                            <input type="date" id="taskDate" required>
+                            <input type="time" id="taskTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="taskPriority">
+                            <option value="high">High Priority</option>
+                            <option value="medium" selected>Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Times</label>
+                        <select id="notificationTimes">
+                            <option value="2">2 reminders (24h & 1h before)</option>
+                            <option value="3">3 reminders (48h, 24h & 1h before)</option>
+                            <option value="1">1 reminder (1h before)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Save Reminder
+                    </button>
+                </form>
+            </div>
+
+            <!-- Calendar and Tasks -->
+            <div>
+                <div class="calendar-container">
+                    <div id="calendar"></div>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="tasks-list">
+                    <div class="tasks-header">
+                        <h3><i class="fas fa-tasks"></i> Upcoming Tasks</h3>
+                        <div class="filter-section">
+                            <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+                            <button class="filter-btn" onclick="filterTasks('high')">High</button>
+                            <button class="filter-btn" onclick="filterTasks('medium')">Medium</button>
+                            <button class="filter-btn" onclick="filterTasks('low')">Low</button>
+                        </div>
+                    </div>
+                    <div class="tasks-container" id="tasksContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    
+    <script>
+        // Store tasks in localStorage
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let notifications = [];
+        let notificationInterval;
+        let currentFilter = 'all';
+
+        // Initialize calendar
+        $(document).ready(function() {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: true,
+                eventLimit: true,
+                events: tasks.map(task => ({
+                    id: task.id,
+                    title: task.title,
+                    start: task.dateTime,
+                    className: `priority-${task.priority}`,
+                    description: task.description
+                })),
+                eventClick: function(event) {
+                    const task = tasks.find(t => t.id == event.id);
+                    if (task) {
+                        showTaskDetails(task);
+                    }
+                }
+            });
+
+            // Load tasks
+            loadTasks();
+            
+            // Start notification checker
+            startNotificationChecker();
+            
+            // Request notification permission
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDate').value = today;
+        });
+
+        // Handle form submission
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const task = {
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value,
+                date: document.getElementById('taskDate').value,
+                time: document.getElementById('taskTime').value,
+                dateTime: `${document.getElementById('taskDate').value}T${document.getElementById('taskTime').value}`,
+                priority: document.getElementById('taskPriority').value,
+                notificationTimes: parseInt(document.getElementById('notificationTimes').value),
+                createdAt: new Date().toISOString(),
+                notificationsSent: []
+            };
+            
+            tasks.push(task);
+            saveTasks();
+            loadTasks();
+            updateCalendar();
+            
+            // Reset form
+            this.reset();
+            document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+            
+            // Show success notification
+            showNotification('Task added successfully!', 'success');
+        });
+
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Load tasks to display
+        function loadTasks(filter = currentFilter) {
+            currentFilter = filter;
+            const container = document.getElementById('tasksContainer');
+            const now = new Date();
+            
+            let filteredTasks = tasks.filter(task => new Date(task.dateTime) > now);
+            filteredTasks.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+            
+            if (filter !== 'all') {
+                filteredTasks = filteredTasks.filter(task => task.priority === filter);
+            }
+            
+            if (filteredTasks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No tasks found</p>';
+                return;
+            }
+            
+            container.innerHTML = filteredTasks.map(task => `
+                <div class="task-item priority-${task.priority}" onclick="showTaskDetails(${JSON.stringify(task).replace(/"/g, '&quot;')})">
+                    <div class="task-title">
+                        <h4>${task.title}</h4>
+                        <span class="task-priority">${task.priority}</span>
+                    </div>
+                    <div class="task-datetime">
+                        <i class="far fa-calendar"></i> ${moment(task.dateTime).format('MMM Do, h:mm a')}
+                    </div>
+                    ${task.description ? `<div class="task-description">${task.description.substring(0, 50)}${task.description.length > 50 ? '...' : ''}</div>` : ''}
+                    <div class="task-actions" onclick="event.stopPropagation()">
+                        <button class="edit-btn" onclick="openEditModal(${task.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="delete-btn" onclick="deleteTask(${task.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter tasks
+        function filterTasks(priority) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadTasks(priority);
+        }
+
+        // Show task details in modal
+        function showTaskDetails(task) {
+            const modal = document.getElementById('taskModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = `
+                <div class="task-detail-item">
+                    <div class="task-detail-label">Title</div>
+                    <div class="task-detail-value">${task.title}</div>
+                </div>
+                <div class="task-detail-item">
+                    <div class="task-detail-label">Description</div>
+                    <div class="task-detail-value">${task.description || 'No description'}</div>
+                </div>
+                <div class="task-detail-item">
+                    <div class="task-detail-label">Date & Time</div>
+                    <div class="task-detail-value">${moment(task.dateTime).format('MMMM Do YYYY, h:mm a')}</div>
+                </div>
+                <div class="task-detail-item">
+                    <div class="task-detail-label">Priority</div>
+                    <div class="task-detail-value priority-${task.priority}" style="border-left-width: 4px;">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</div>
+                </div>
+                <div class="task-detail-item">
+                    <div class="task-detail-label">Created</div>
+                    <div class="task-detail-value">${moment(task.createdAt).format('MMMM Do YYYY, h:mm a')}</div>
+                </div>
+                <div class="task-actions" style="justify-content: center; margin-top: 20px;">
+                    <button class="btn edit-btn" onclick="openEditModal(${task.id}); closeModal();">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteTask(${task.id}); closeModal();">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+        }
+
+        // Open edit modal
+        function openEditModal(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            document.getElementById('editTaskId').value = task.id;
+            document.getElementById('editTitle').value = task.title;
+            document.getElementById('editDescription').value = task.description || '';
+            document.getElementById('editDate').value = task.date;
+            document.getElementById('editTime').value = task.time;
+            document.getElementById('editPriority').value = task.priority;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const taskId = parseInt(document.getElementById('editTaskId').value);
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            
+            if (taskIndex === -1) return;
+            
+            tasks[taskIndex] = {
+                ...tasks[taskIndex],
+                title: document.getElementById('editTitle').value,
+                description: document.getElementById('editDescription').value,
+                date: document.getElementById('editDate').value,
+                time: document.getElementById('editTime').value,
+                dateTime: `${document.getElementById('editDate').value}T${document.getElementById('editTime').value}`,
+                priority: document.getElementById('editPriority').value
+            };
+            
+            saveTasks();
+            loadTasks();
+            updateCalendar();
+            closeEditModal();
+            showNotification('Task updated successfully!', 'success');
+        });
+
+        // Delete from edit modal
+        function deleteFromEdit() {
+            const taskId = parseInt(document.getElementById('editTaskId').value);
+            deleteTask(taskId);
+            closeEditModal();
+        }
+
+        // Delete task
+        function deleteTask(id) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                tasks = tasks.filter(task => task.id !== id);
+                saveTasks();
+                loadTasks();
+                updateCalendar();
+                showNotification('Task deleted successfully!', 'success');
+            }
+        }
+
+        // Update calendar events
+        function updateCalendar() {
+            $('#calendar').fullCalendar('removeEvents');
+            $('#calendar').fullCalendar('addEventSource', tasks.map(task => ({
+                id: task.id,
+                title: task.title,
+                start: task.dateTime,
+                className: `priority-${task.priority}`,
+                description: task.description
+            })));
+        }
+
+        // Start notification checker
+        function startNotificationChecker() {
+            notificationInterval = setInterval(checkNotifications, 60000); // Check every minute
+        }
+
+        // Check for due notifications
+        function checkNotifications() {
+            const now = new Date();
+            
+            tasks.forEach(task => {
+                const taskDate = new Date(task.dateTime);
+                const timeDiff = taskDate - now;
+                
+                // Check if task is within notification window
+                if (timeDiff > 0) {
+                    const hoursUntil = timeDiff / (1000 * 60 * 60);
+                    
+                    // Send notifications based on user preference
+                    if (task.notificationTimes >= 2 && hoursUntil <= 24 && hoursUntil > 23 && !task.notificationsSent.includes('24h')) {
+                        sendNotification(task, '24 hours');
+                        task.notificationsSent.push('24h');
+                        saveTasks();
+                    }
+                    
+                    if (task.notificationTimes >= 1 && hoursUntil <= 1 && hoursUntil > 0.5 && !task.notificationsSent.includes('1h')) {
+                        sendNotification(task, '1 hour');
+                        task.notificationsSent.push('1h');
+                        saveTasks();
+                    }
+                    
+                    if (task.notificationTimes >= 3 && hoursUntil <= 48 && hoursUntil > 47 && !task.notificationsSent.includes('48h')) {
+                        sendNotification(task, '48 hours');
+                        task.notificationsSent.push('48h');
+                        saveTasks();
+                    }
+                }
+                
+                // Check for expired tasks
+                if (timeDiff < 0 && timeDiff > -3600000 && !task.notificationsSent.includes('expired')) { // Within last hour
+                    sendNotification(task, 'expired', true);
+                    task.notificationsSent.push('expired');
+                    saveTasks();
+                }
+            });
+            
+            updateNotificationBadge();
+        }
+
+        // Send notification
+        function sendNotification(task, timeFrame, isExpired = false) {
+            const message = isExpired ? 
+                `Task "${task.title}" has expired!` :
+                `Task "${task.title}" is due in ${timeFrame}!`;
+            
+            // Show in-app notification
+            showNotification(message, isExpired ? 'expired' : 'warning');
+            
+            // Show browser notification if permitted
+            if (Notification.permission === 'granted') {
+                new Notification('Task Reminder', {
+                    body: message,
+                    icon: 'https://via.placeholder.com/128'
+                });
+            }
+            
+            // Play sound
+            playNotificationSound();
+        }
+
+        // Show in-app notification
+        function showNotification(message, type = 'info') {
+            const panel = document.getElementById('notificationPanel');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'warning' ? 'fa-exclamation-triangle' : type === 'expired' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
+                ${message}
+                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            panel.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+            
+            updateNotificationBadge();
+        }
+
+        // Play notification sound
+        function playNotificationSound() {
+            const audio = new Audio('data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVgAAACAgICAf39/f39/f3+AgICAf39/f39/f3+AgICAf39/f39/f3+AgICAf39/f39/f3+AgICAf39/f39/f3+AgICAf39/f39/f3+AgICAf39/f39/f38=');
+            audio.play().catch(e => console.log('Audio play failed:', e));
+        }
+
+        // Update notification badge
+        function updateNotificationBadge() {
+            const now = new Date();
+            const upcomingCount = tasks.filter(task => {
+                const taskDate = new Date(task.dateTime);
+                const timeDiff = taskDate - now;
+                return timeDiff > 0 && timeDiff < 86400000; // Within next 24 hours
+            }).length;
+            
+            document.getElementById('notificationCount').textContent = upcomingCount;
+        }
+
+        // Show all notifications
+        function showAllNotifications() {
+            const now = new Date();
+            const upcoming = tasks.filter(task => {
+                const taskDate = new Date(task.dateTime);
+                return taskDate > now;
+            });
+            
+            if (upcoming.length === 0) {
+                showNotification('No upcoming notifications', 'info');
+                return;
+            }
+            
+            upcoming.forEach(task => {
+                const taskDate = new Date(task.dateTime);
+                const timeDiff = taskDate - now;
+                const hoursLeft = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutesLeft = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                
+                showNotification(
+                    `${task.title}: ${hoursLeft}h ${minutesLeft}m remaining`,
+                    hoursLeft < 1 ? 'warning' : 'info'
+                );
+            });
+        }
+
+        // Clean up interval on page unload
+        window.addEventListener('beforeunload', function() {
+            if (notificationInterval) {
+                clearInterval(notificationInterval);
+            }
+        });
+    </script>
+</body>
+</html>
