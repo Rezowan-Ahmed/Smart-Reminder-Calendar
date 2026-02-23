@@ -26,7 +26,7 @@
             margin: 0 auto;
         }
 
-        /* Header - Mobile First */
+        /* Header */
         .header {
             background: white;
             border-radius: 15px;
@@ -63,7 +63,7 @@
             width: fit-content;
         }
 
-        /* Mobile First Layout - Stack vertically */
+        /* Mobile First Layout */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -81,7 +81,7 @@
 
         .task-form h2 {
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: 1.3em;
             display: flex;
             align-items: center;
@@ -93,14 +93,14 @@
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #555;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.95em;
         }
 
@@ -108,33 +108,132 @@
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px; /* Prevents zoom on iOS */
             transition: border-color 0.3s;
             background: #f8f9fa;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-        }
-
+        /* Improved Date & Time inputs for mobile */
         .datetime-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .datetime-group input {
+        .datetime-input-wrapper {
+            position: relative;
             width: 100%;
         }
 
-        /* Calendar - Mobile Optimized */
+        .datetime-input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.1em;
+            z-index: 1;
+        }
+
+        .datetime-input-wrapper input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .datetime-input-wrapper input:focus {
+            border-color: #667eea;
+            background: white;
+            outline: none;
+        }
+
+        /* Custom styling for date/time pickers on mobile */
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            opacity: 0.6;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Priority Select Styling */
+        .priority-select-wrapper {
+            position: relative;
+        }
+
+        .priority-select-wrapper select {
+            padding: 14px 14px 14px 45px;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .priority-select-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.1em;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Current time indicator */
+        .current-time-info {
+            background: #e8f0fe;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95em;
+            color: #444;
+            border-left: 4px solid #667eea;
+        }
+
+        .current-time-info i {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: #5a6fd6;
+        }
+
+        .btn i {
+            font-size: 1.2em;
+        }
+
+        /* Calendar Container */
         .calendar-container {
             background: white;
             border-radius: 15px;
@@ -148,37 +247,7 @@
             min-width: 300px;
         }
 
-        /* Fix FullCalendar on mobile */
-        .fc-header-toolbar {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px !important;
-        }
-
-        .fc-toolbar .fc-left,
-        .fc-toolbar .fc-center,
-        .fc-toolbar .fc-right {
-            float: none !important;
-            text-align: center !important;
-        }
-
-        .fc-toolbar .fc-center h2 {
-            font-size: 1.2em !important;
-        }
-
-        .fc-button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .fc-button {
-            padding: 6px 10px !important;
-            font-size: 0.9em !important;
-        }
-
-        /* Tasks List - Mobile Optimized */
+        /* Tasks List */
         .tasks-list {
             background: white;
             border-radius: 15px;
@@ -353,28 +422,6 @@
             background: #ffe8e8;
         }
 
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 10px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-            background: #5a6fd6;
-        }
-
         /* Modal - Mobile Optimized */
         .modal {
             display: none;
@@ -467,7 +514,7 @@
             }
         }
 
-        /* Tablet and Desktop Styles */
+        /* Tablet and Desktop */
         @media (min-width: 768px) {
             body {
                 padding: 20px;
@@ -602,17 +649,26 @@
                 <div class="form-group">
                     <label>Date & Time</label>
                     <div class="datetime-group">
-                        <input type="date" id="editDate" required>
-                        <input type="time" id="editTime" required>
+                        <div class="datetime-input-wrapper">
+                            <i class="fas fa-calendar"></i>
+                            <input type="date" id="editDate" required>
+                        </div>
+                        <div class="datetime-input-wrapper">
+                            <i class="fas fa-clock"></i>
+                            <input type="time" id="editTime" required>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Priority</label>
-                    <select id="editPriority">
-                        <option value="high">High Priority</option>
-                        <option value="medium">Medium Priority</option>
-                        <option value="low">Low Priority</option>
-                    </select>
+                    <div class="priority-select-wrapper">
+                        <i class="fas fa-flag"></i>
+                        <select id="editPriority">
+                            <option value="high">High Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                    </div>
                 </div>
                 <button type="submit" class="btn">Update Task</button>
                 <button type="button" class="btn" style="background: #dc3545; margin-top: 10px;" onclick="deleteFromEdit()">Delete Task</button>
@@ -632,6 +688,13 @@
             <!-- Task Form -->
             <div class="task-form">
                 <h2><i class="fas fa-plus-circle"></i> Add New Reminder</h2>
+                
+                <!-- Current time indicator -->
+                <div class="current-time-info" id="currentTimeInfo">
+                    <i class="fas fa-clock"></i>
+                    <span>Current: <span id="currentDateTime">Loading...</span></span>
+                </div>
+
                 <form id="taskForm">
                     <div class="form-group">
                         <label>Title</label>
@@ -646,27 +709,39 @@
                     <div class="form-group">
                         <label>Date & Time</label>
                         <div class="datetime-group">
-                            <input type="date" id="taskDate" required>
-                            <input type="time" id="taskTime" required>
+                            <div class="datetime-input-wrapper">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="date" id="taskDate" required>
+                            </div>
+                            <div class="datetime-input-wrapper">
+                                <i class="fas fa-clock"></i>
+                                <input type="time" id="taskTime" required>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Priority</label>
-                        <select id="taskPriority">
-                            <option value="high">High Priority</option>
-                            <option value="medium" selected>Medium Priority</option>
-                            <option value="low">Low Priority</option>
-                        </select>
+                        <div class="priority-select-wrapper">
+                            <i class="fas fa-flag"></i>
+                            <select id="taskPriority">
+                                <option value="high">High Priority</option>
+                                <option value="medium" selected>Medium Priority</option>
+                                <option value="low">Low Priority</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Notification Times</label>
-                        <select id="notificationTimes">
-                            <option value="2">2 reminders (24h & 1h before)</option>
-                            <option value="3">3 reminders (48h, 24h & 1h before)</option>
-                            <option value="1">1 reminder (1h before)</option>
-                        </select>
+                        <div class="priority-select-wrapper">
+                            <i class="fas fa-bell"></i>
+                            <select id="notificationTimes">
+                                <option value="2">2 reminders (24h & 1h before)</option>
+                                <option value="3">3 reminders (48h, 24h & 1h before)</option>
+                                <option value="1">1 reminder (1h before)</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn">
@@ -732,6 +807,13 @@
                 }
             });
 
+            // Set default date and time to current
+            setDefaultDateTime();
+            
+            // Update current time display every second
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+
             // Load tasks
             loadTasks();
             
@@ -742,23 +824,74 @@
             if (Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
-            
-            // Set default date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('taskDate').value = today;
         });
+
+        // Set default date and time to current
+        function setDefaultDateTime() {
+            const now = new Date();
+            
+            // Format date as YYYY-MM-DD
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const today = `${year}-${month}-${day}`;
+            
+            // Format time as HH:MM (round to nearest 30 minutes)
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            
+            // Round to nearest 30 minutes
+            if (minutes < 15) {
+                minutes = '00';
+            } else if (minutes < 45) {
+                minutes = '30';
+            } else {
+                minutes = '00';
+                hours = (hours + 1) % 24;
+            }
+            
+            const currentTime = `${String(hours).padStart(2, '0')}:${minutes}`;
+            
+            document.getElementById('taskDate').value = today;
+            document.getElementById('taskTime').value = currentTime;
+        }
+
+        // Update current time display
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            };
+            document.getElementById('currentDateTime').textContent = now.toLocaleString('en-US', options);
+        }
 
         // Handle form submission
         document.getElementById('taskForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Validate that date and time are selected
+            const selectedDate = document.getElementById('taskDate').value;
+            const selectedTime = document.getElementById('taskTime').value;
+            
+            if (!selectedDate || !selectedTime) {
+                showNotification('Please select both date and time', 'warning');
+                return;
+            }
+            
             const task = {
                 id: Date.now(),
                 title: document.getElementById('taskTitle').value,
                 description: document.getElementById('taskDescription').value,
-                date: document.getElementById('taskDate').value,
-                time: document.getElementById('taskTime').value,
-                dateTime: `${document.getElementById('taskDate').value}T${document.getElementById('taskTime').value}`,
+                date: selectedDate,
+                time: selectedTime,
+                dateTime: `${selectedDate}T${selectedTime}`,
                 priority: document.getElementById('taskPriority').value,
                 notificationTimes: parseInt(document.getElementById('notificationTimes').value),
                 createdAt: new Date().toISOString(),
@@ -770,9 +903,11 @@
             loadTasks();
             updateCalendar();
             
-            // Reset form
-            this.reset();
-            document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+            // Reset form but keep default date/time
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            setDefaultDateTime();
+            document.getElementById('taskPriority').value = 'medium';
             
             // Show success notification
             showNotification('Task added successfully!', 'success');
