@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Smart Reminder Calendar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -18,7 +18,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
@@ -26,72 +26,82 @@
             margin: 0 auto;
         }
 
+        /* Header - Mobile First */
         .header {
             background: white;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .header h1 {
             color: #667eea;
-            font-size: 2em;
+            font-size: 1.5em;
             margin: 0;
+            display: flex;
+            align-items: center;
         }
 
         .header h1 i {
             margin-right: 10px;
+            font-size: 1.2em;
         }
 
         .notification-badge {
             background: #ff4757;
             color: white;
-            padding: 8px 15px;
+            padding: 8px 12px;
             border-radius: 25px;
             font-size: 0.9em;
             cursor: pointer;
             transition: transform 0.3s;
+            display: inline-block;
+            width: fit-content;
         }
 
-        .notification-badge:hover {
-            transform: scale(1.05);
-        }
-
+        /* Mobile First Layout - Stack vertically */
         .main-content {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        /* Task Form Styles */
+        /* Task Form - Mobile Optimized */
         .task-form {
             background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            height: fit-content;
+            order: 1;
         }
 
         .task-form h2 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .task-form h2 i {
+            margin-right: 10px;
+            color: #667eea;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #555;
             font-weight: 500;
+            font-size: 0.95em;
         }
 
         .form-group input,
@@ -100,9 +110,10 @@
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 10px;
+            font-size: 16px; /* Prevents zoom on iOS */
             transition: border-color 0.3s;
+            background: #f8f9fa;
         }
 
         .form-group input:focus,
@@ -110,98 +121,106 @@
         .form-group select:focus {
             outline: none;
             border-color: #667eea;
+            background: white;
         }
 
         .datetime-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
         }
 
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+        .datetime-group input {
             width: 100%;
-            font-weight: 600;
-            margin-bottom: 10px;
         }
 
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        /* Calendar Styles */
+        /* Calendar - Mobile Optimized */
         .calendar-container {
             background: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            order: 2;
+            overflow-x: auto;
         }
 
         #calendar {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
+            min-width: 300px;
         }
 
-        /* Tasks List */
+        /* Fix FullCalendar on mobile */
+        .fc-header-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px !important;
+        }
+
+        .fc-toolbar .fc-left,
+        .fc-toolbar .fc-center,
+        .fc-toolbar .fc-right {
+            float: none !important;
+            text-align: center !important;
+        }
+
+        .fc-toolbar .fc-center h2 {
+            font-size: 1.2em !important;
+        }
+
+        .fc-button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .fc-button {
+            padding: 6px 10px !important;
+            font-size: 0.9em !important;
+        }
+
+        /* Tasks List - Mobile Optimized */
         .tasks-list {
             background: white;
             border-radius: 15px;
             padding: 20px;
-            margin-top: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            order: 3;
         }
 
         .tasks-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .tasks-header h3 {
             color: #333;
             margin: 0;
-            font-size: 1.3em;
+            font-size: 1.2em;
         }
 
         .filter-section {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             background: #f0f2f5;
             padding: 5px;
-            border-radius: 8px;
+            border-radius: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .filter-btn {
             padding: 8px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             background: transparent;
             transition: all 0.3s;
             font-weight: 500;
+            font-size: 0.9em;
+            white-space: nowrap;
+            flex: 1;
         }
 
         .filter-btn.active {
@@ -210,13 +229,14 @@
         }
 
         .tasks-container {
-            max-height: 500px;
+            max-height: 400px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .task-item {
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 15px;
             margin-bottom: 10px;
             cursor: pointer;
@@ -224,9 +244,9 @@
             border-left: 4px solid transparent;
         }
 
-        .task-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .task-item:active {
+            transform: scale(0.98);
+            background: #e9ecef;
         }
 
         .priority-high {
@@ -246,20 +266,26 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .task-title h4 {
             color: #333;
             margin: 0;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 600;
+            word-break: break-word;
+            flex: 1;
         }
 
         .task-priority {
-            font-size: 0.8em;
-            padding: 3px 8px;
-            border-radius: 12px;
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 20px;
             color: white;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
 
         .priority-high .task-priority {
@@ -276,26 +302,30 @@
 
         .task-datetime {
             color: #666;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
         }
 
         .task-datetime i {
             margin-right: 5px;
             color: #667eea;
+            width: 16px;
         }
 
         .task-description {
             color: #777;
-            font-size: 0.9em;
+            font-size: 0.85em;
             margin-bottom: 10px;
-            padding-left: 20px;
+            padding-left: 10px;
             border-left: 2px solid #e0e0e0;
+            word-break: break-word;
         }
 
         .task-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
             margin-top: 10px;
         }
@@ -304,29 +334,48 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1em;
-            padding: 5px 10px;
-            border-radius: 5px;
+            font-size: 0.9em;
+            padding: 8px 15px;
+            border-radius: 8px;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .edit-btn {
             color: #667eea;
-        }
-
-        .edit-btn:hover {
             background: #e8eefd;
         }
 
         .delete-btn {
             color: #ff4757;
-        }
-
-        .delete-btn:hover {
             background: #ffe8e8;
         }
 
-        /* Modal Styles */
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: #5a6fd6;
+        }
+
+        /* Modal - Mobile Optimized */
         .modal {
             display: none;
             position: fixed;
@@ -337,7 +386,7 @@
             background: rgba(0,0,0,0.5);
             z-index: 1000;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
         }
 
         .modal.active {
@@ -346,12 +395,21 @@
 
         .modal-content {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
+            border-radius: 20px 20px 0 0;
+            padding: 25px;
+            width: 100%;
+            max-height: 90vh;
             overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -364,6 +422,7 @@
         .modal-header h2 {
             color: #333;
             margin: 0;
+            font-size: 1.3em;
         }
 
         .close-btn {
@@ -372,74 +431,139 @@
             font-size: 1.5em;
             cursor: pointer;
             color: #999;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        }
-
-        .task-detail-item {
-            margin-bottom: 15px;
-        }
-
-        .task-detail-label {
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .task-detail-value {
-            color: #333;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            padding: 5px 10px;
         }
 
         .notification-panel {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            max-width: 350px;
-            z-index: 1000;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            max-width: 100%;
+            z-index: 1001;
+            pointer-events: none;
         }
 
         .notification {
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
+            animation: slideDown 0.3s ease;
             border-left: 4px solid #667eea;
+            pointer-events: auto;
+            font-size: 0.95em;
         }
 
-        .notification.warning {
-            border-left-color: #ffa502;
-        }
-
-        .notification.expired {
-            border-left-color: #ff4757;
-        }
-
-        @keyframes slideIn {
+        @keyframes slideDown {
             from {
-                transform: translateX(100%);
+                transform: translateY(-100%);
                 opacity: 0;
             }
             to {
-                transform: translateX(0);
+                transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
+        /* Tablet and Desktop Styles */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
             }
-            
+
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .main-content {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .task-form {
+                flex: 0 0 350px;
+                order: 1;
+            }
+
+            .calendar-container {
+                flex: 1;
+                order: 2;
+            }
+
+            .tasks-list {
+                flex: 0 0 100%;
+                order: 3;
+            }
+
             .tasks-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .filter-section {
+                width: auto;
+            }
+
+            .filter-btn {
+                flex: 0 1 auto;
+            }
+
+            .datetime-group {
+                flex-direction: row;
+            }
+
+            .modal-content {
+                max-width: 500px;
+                border-radius: 20px;
+                margin: 20px;
+            }
+
+            .modal {
+                align-items: center;
+            }
+
+            .notification-panel {
+                left: auto;
+                right: 20px;
+                max-width: 350px;
+            }
+
+            @keyframes slideDown {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 375px) {
+            .task-title {
                 flex-direction: column;
-                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .task-actions {
+                flex-wrap: wrap;
+            }
+
+            .task-actions button {
+                flex: 1;
+                justify-content: center;
             }
         }
     </style>
@@ -491,14 +615,14 @@
                     </select>
                 </div>
                 <button type="submit" class="btn">Update Task</button>
-                <button type="button" class="btn btn-danger" onclick="deleteFromEdit()">Delete Task</button>
+                <button type="button" class="btn" style="background: #dc3545; margin-top: 10px;" onclick="deleteFromEdit()">Delete Task</button>
             </form>
         </div>
     </div>
 
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-calendar-check"></i> Smart Reminder Calendar</h1>
+            <h1><i class="fas fa-calendar-check"></i> Calendar</h1>
             <div class="notification-badge" onclick="showAllNotifications()">
                 <i class="fas fa-bell"></i> <span id="notificationCount">0</span> Reminders
             </div>
@@ -551,25 +675,23 @@
                 </form>
             </div>
 
-            <!-- Calendar and Tasks -->
-            <div>
-                <div class="calendar-container">
-                    <div id="calendar"></div>
-                </div>
+            <!-- Calendar -->
+            <div class="calendar-container">
+                <div id="calendar"></div>
+            </div>
 
-                <!-- Tasks List -->
-                <div class="tasks-list">
-                    <div class="tasks-header">
-                        <h3><i class="fas fa-tasks"></i> Upcoming Tasks</h3>
-                        <div class="filter-section">
-                            <button class="filter-btn active" onclick="filterTasks('all')">All</button>
-                            <button class="filter-btn" onclick="filterTasks('high')">High</button>
-                            <button class="filter-btn" onclick="filterTasks('medium')">Medium</button>
-                            <button class="filter-btn" onclick="filterTasks('low')">Low</button>
-                        </div>
+            <!-- Tasks List -->
+            <div class="tasks-list">
+                <div class="tasks-header">
+                    <h3><i class="fas fa-tasks"></i> Upcoming Tasks</h3>
+                    <div class="filter-section">
+                        <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+                        <button class="filter-btn" onclick="filterTasks('high')">High</button>
+                        <button class="filter-btn" onclick="filterTasks('medium')">Medium</button>
+                        <button class="filter-btn" onclick="filterTasks('low')">Low</button>
                     </div>
-                    <div class="tasks-container" id="tasksContainer"></div>
                 </div>
+                <div class="tasks-container" id="tasksContainer"></div>
             </div>
         </div>
     </div>
@@ -679,8 +801,11 @@
                 return;
             }
             
-            container.innerHTML = filteredTasks.map(task => `
-                <div class="task-item priority-${task.priority}" onclick="showTaskDetails(${JSON.stringify(task).replace(/"/g, '&quot;')})">
+            container.innerHTML = filteredTasks.map(task => {
+                // Escape task data for onclick
+                const taskJson = JSON.stringify(task).replace(/"/g, '&quot;');
+                return `
+                <div class="task-item priority-${task.priority}" onclick='showTaskDetails(${taskJson})'>
                     <div class="task-title">
                         <h4>${task.title}</h4>
                         <span class="task-priority">${task.priority}</span>
@@ -698,7 +823,7 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // Filter tasks
@@ -714,31 +839,33 @@
             const modalBody = document.getElementById('modalBody');
             
             modalBody.innerHTML = `
-                <div class="task-detail-item">
-                    <div class="task-detail-label">Title</div>
-                    <div class="task-detail-value">${task.title}</div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #555; margin-bottom: 5px;">Title</div>
+                    <div style="color: #333; padding: 12px; background: #f8f9fa; border-radius: 10px; word-break: break-word;">${task.title}</div>
                 </div>
-                <div class="task-detail-item">
-                    <div class="task-detail-label">Description</div>
-                    <div class="task-detail-value">${task.description || 'No description'}</div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #555; margin-bottom: 5px;">Description</div>
+                    <div style="color: #333; padding: 12px; background: #f8f9fa; border-radius: 10px; word-break: break-word;">${task.description || 'No description'}</div>
                 </div>
-                <div class="task-detail-item">
-                    <div class="task-detail-label">Date & Time</div>
-                    <div class="task-detail-value">${moment(task.dateTime).format('MMMM Do YYYY, h:mm a')}</div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #555; margin-bottom: 5px;">Date & Time</div>
+                    <div style="color: #333; padding: 12px; background: #f8f9fa; border-radius: 10px;">${moment(task.dateTime).format('MMMM Do YYYY, h:mm a')}</div>
                 </div>
-                <div class="task-detail-item">
-                    <div class="task-detail-label">Priority</div>
-                    <div class="task-detail-value priority-${task.priority}" style="border-left-width: 4px;">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}</div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #555; margin-bottom: 5px;">Priority</div>
+                    <div style="padding: 12px; background: #f8f9fa; border-radius: 10px;">
+                        <span style="display: inline-block; padding: 5px 15px; border-radius: 20px; background: ${task.priority === 'high' ? '#ff4757' : task.priority === 'medium' ? '#ffa502' : '#26de81'}; color: white;">${task.priority}</span>
+                    </div>
                 </div>
-                <div class="task-detail-item">
-                    <div class="task-detail-label">Created</div>
-                    <div class="task-detail-value">${moment(task.createdAt).format('MMMM Do YYYY, h:mm a')}</div>
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; color: #555; margin-bottom: 5px;">Created</div>
+                    <div style="color: #666; padding: 12px; background: #f8f9fa; border-radius: 10px;">${moment(task.createdAt).format('MMMM Do YYYY, h:mm a')}</div>
                 </div>
-                <div class="task-actions" style="justify-content: center; margin-top: 20px;">
-                    <button class="btn edit-btn" onclick="openEditModal(${task.id}); closeModal();">
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn edit-btn" style="flex: 1; background: #667eea;" onclick="openEditModal(${task.id}); closeModal();">
                         <i class="fas fa-edit"></i> Edit
                     </button>
-                    <button class="btn btn-danger" onclick="deleteTask(${task.id}); closeModal();">
+                    <button class="btn delete-btn" style="flex: 1; background: #dc3545;" onclick="deleteTask(${task.id}); closeModal();">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
@@ -905,7 +1032,7 @@
             notification.innerHTML = `
                 <i class="fas ${type === 'warning' ? 'fa-exclamation-triangle' : type === 'expired' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
                 ${message}
-                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer;">
+                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; cursor: pointer; padding: 0 5px;">
                     <i class="fas fa-times"></i>
                 </button>
             `;
